@@ -5,6 +5,8 @@ services:
     image: mysql
     environment:
       - MYSQL_ROOT_PASSWORD=1111
+    volumes:
+      - /var/lib/mysql
   phpmyadmin:
     image: phpmyadmin
     environment:

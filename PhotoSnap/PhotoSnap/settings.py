@@ -1,19 +1,22 @@
 from pathlib import Path
 from django.utils.translation import gettext as _
+from dotenv import load_dotenv
 import os
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
 
+load_dotenv()
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-do1-(g7v6+-mg5ey-!5**jaty6$fgrs+bh&qw#6&(s)hh$hvrn'
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = os.getenv('SECRET_KEY')
 
-ALLOWED_HOSTS = ['0.0.0.0']
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = os.getenv('DEBUG')
+
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '0.0.0.0']
+
 
 
 
@@ -69,14 +72,12 @@ WSGI_APPLICATION = 'PhotoSnap.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'photosnap',
-        'USER': 'root',
-        'PASSWORD': '1111',
-        'HOST': 'db',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_USER_PASSWORD'),
+        'HOST':'db',
         'PORT': '3306',
-        'OPTIONS': {
-            'init_command' : "SET sql_mode='STRICT_TRANS_TABLES'"
-        }
+        'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"},
     }
 }
 
@@ -105,7 +106,9 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-    ],
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
 }
 
 # Internationalization
