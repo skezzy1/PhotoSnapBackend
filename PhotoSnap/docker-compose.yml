@@ -5,7 +5,6 @@ services:
     image: mysql
     environment:
       - MYSQL_ROOT_PASSWORD={DB_USER_PASSWORD}
-      - MYSQL_HOST={DB_HOST}
     volumes:
       - /var/lib/mysql
   phpmyadmin:
