@@ -1,17 +1,24 @@
+from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
-from .models import CustomUser
+from .models import RegisterUser
+from django.utils.translation import gettext_lazy as _
+from django.core.exceptions import ValidationError
 
-class UserSerializer(serializers.ModelSerializer):
+class RegisterUserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CustomUser
-        fields = ['username', 'email', 'password']
-        extra_kwargs = {'password': {'write_only': True}}
+        model = RegisterUser
+        fields = ['username', 'email', 'password', 'confirm_password']
 
-    def create(self, validated_data):
-        user = CustomUser(
-            username=validated_data['username'],
-            email=validated_data['email']
-        )
-        user.set_password(validated_data['password'])
-        user.save()
-        return user
+    def validate_email(self, value):
+        if RegisterUser.objects.filter(email=value).exists():
+            raise ValidationError(_("This email address is already in use."))
+        return value
+    
+    def validate_username(self, value):
+        if RegisterUser.objects.filter(username=value).exists():
+            raise ValidationError(_("This username is already in use."))
+        return value
+    def validate(self, attrs):
+        if attrs['password'] != attrs['confirm_password']:
+            raise serializers.ValidationError(_({"password": "Password fields didn't match."}))
+        return attrs
