@@ -4,8 +4,8 @@ from .models import BaseUser
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 class UserModelAdmin(BaseUserAdmin):
-    list_display = ('user_id', 'email', 'username', 'last_login', 'is_premium', 'is_staff')
-    list_filter = ('is_staff', 'is_premium') 
+    list_display = ('user_id', 'email', 'username', 'password','last_login','date_joined', 'is_premium', 'is_staff', 'last_login')
+    list_filter = ('is_staff',) 
     fieldsets = (
         ('User Credentials', {'fields': ('username', 'password')}),
         ('Personal info', {'fields': ('email', 'last_login')}),

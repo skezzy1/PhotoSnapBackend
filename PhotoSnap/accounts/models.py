@@ -36,7 +36,7 @@ class CustomUserManager(BaseUserManager):
 class BaseUser(AbstractBaseUser, PermissionsMixin):
     user_id = models.AutoField(primary_key=True)
     email = models.EmailField(verbose_name=_("Email address"), max_length=150, unique=True, blank=False)
-    username = models.SlugField(verbose_name=_('Username'), max_length=150, unique=True, blank=False)
+    username = models.CharField(verbose_name=_('Username'), max_length=150, unique=True, blank=False)
     password = models.CharField(verbose_name=_('Password'), max_length=128, blank=False)
     confirm_password = models.CharField(verbose_name=_('Confirm Password'), max_length=128, blank=False)
     date_joined = models.DateTimeField(verbose_name='Date joined', default=timezone.now)
@@ -50,7 +50,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
-
+    
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
         return self.is_superuser
