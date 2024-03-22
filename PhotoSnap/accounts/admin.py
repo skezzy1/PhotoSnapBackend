@@ -12,9 +12,9 @@ class UserModelAdmin(BaseUserAdmin):
         ('Permissions', {'fields': ('is_staff', 'is_premium')}),
     )
     add_fieldsets = (
-        (None, {
+        ('Add User',{
             'classes': ('wide',),
-            'fields': ('email', 'username', 'password')}
+            'fields': ('email', 'username', 'password', 'confirm_password')}
         ),
     )
     search_fields = ('email', 'username')
@@ -22,4 +22,4 @@ class UserModelAdmin(BaseUserAdmin):
     filter_horizontal = ()
     def __str__(self):
         return self.email
-admin.site.register(BaseUser, UserModelAdmin)
+admin.site.register(BaseUser)
