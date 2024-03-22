@@ -5,9 +5,14 @@ from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 
 class BaseUserSerializer(serializers.ModelSerializer):
+    confirm_password = serializers.CharField(style={'input_type': 'password'}, write_only=True)
+
     class Meta:
         model = BaseUser
         fields = ['username', 'email', 'password', 'confirm_password']
+        extra_kwargs = {
+            'password': {'write_only': True},
+        }
 
     def validate_email(self, value):
         if BaseUser.objects.filter(email=value).exists():
@@ -18,10 +23,14 @@ class BaseUserSerializer(serializers.ModelSerializer):
         if BaseUser.objects.filter(username=value).exists():
             raise ValidationError(_("This {username} is already in use."))
         return value
-    def validate_password(self, attrs, validated_data):
+
+    def validate(self, attrs):
         if attrs['password'] != attrs['confirm_password']:
-            raise serializers.ValidationError(_({"password": "Password fields didn't match."}))
+            raise serializers.ValidationError({"password": "Password fields didn't match."})
         if len(attrs['password']) < 8:
-            raise serializers.ValidationError(_({"password": "Password must be at least 8 characters long."}))
+            raise serializers.ValidationError({"password": "Password must be at least 8 characters long."})
+        return attrs
+
+    def create(self, validated_data):
         validated_data['password'] = make_password(validated_data['password'])
-        return attrs and super().create(validated_data)
+        return BaseUser.objects.create_user(**validated_data)

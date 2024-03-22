@@ -67,7 +67,10 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     def validation(self, *args, **kwargs):
         if self.password and self.confirm_password != self.password:
             raise ValidationError(_("Password and confirm password do not match"))
+        if len(self.password or self.confirm_password) < 8:
+            raise ValidationError(_({"password": "Password must be at least 8 characters long."}))
         self.password = make_password(self.password)
+        self.confirm_passwordpassword = make_password(self.confirm_password)
         super().save(*args, **kwargs)
 
     def clean(self):
