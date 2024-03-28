@@ -6,32 +6,38 @@ from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import BaseUserManager
 
-class CustomUserManager(BaseUserManager):
-    def create_user(self, email, username, password=None, **extra_fields):
-        if not email:
-            raise ValueError(_('The Email field must be set'))
-        email = self.normalize_email(email)
-        
-        user = self.model(
-            email=email,
-            username=username,
-            password=password,
-            **extra_fields
-        )
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
-    
-    def create_superuser(self, email, username, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-    
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Superuser must have is_staff=True.')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser must have is_superuser=True.')
+class UserManager(BaseUserManager):
+    def create_user(self, email, username, password=None, confirm_password=None):
+      """
+      Creates and saves a User with the given email, name, tc and password.
+      """
+      if not email:
+          raise ValueError('User must have an email address')
 
-        return self.create_user(email, username, password, **extra_fields)
+      user = self.model(
+          email=self.normalize_email(email),
+          confirm_password=confirm_password,
+          password=password,
+          username=username,
+      )
+
+      user.set_password(password)
+      user.save(using=self._db)
+      return user
+    
+    def create_superuser(self, email, username, password=None, confirm_password=None):
+      """
+      Creates and saves a superuser with the given email, name, tc and password.
+      """
+      user = self.create_user(
+          email,
+          password=password,
+          confirm_password=confirm_password,
+          username=username,
+      )
+      user.is_admin = True
+      user.save(using=self._db)
+      return user
 
 class BaseUser(AbstractBaseUser, PermissionsMixin):
     user_id = models.AutoField(primary_key=True)
@@ -44,35 +50,24 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False, help_text=_('Designates whether the user can log into this admin site.'))
     is_premium = models.BooleanField(default=False, help_text=_('Designates whether the user is a premium user.'))
-    objects = CustomUserManager()
+    objects = UserManager()
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'password', 'confirm_password']
-
     def __str__(self):
-        return self.email
-    
-    def has_perm(self, perm, obj=None):
-        "Does the user have a specific permission?"
-        return self.is_superuser
+      return self.email
 
-    def has_module_perms(self, admin_site):
-        "Does the user have permissions to view the app 'admin'?"
-        return True
+    def has_perm(self, perm, obj=None):
+      "Does the user have a specific permission?"
+      # Simplest possible answer: Yes, always
+      return self.is_admin
+
+    def has_module_perms(self, app_label):
+      "Does the user have permissions to view the app `app_label`?"
+      # Simplest possible answer: Yes, always
+      return True
 
     @property
     def is_admin(self):
-        "Is the user a member of staff?"
-        return self.is_staff
-
-    def validation(self, *args, **kwargs):
-        if self.password and self.confirm_password != self.password:
-            raise ValidationError(_("Password and confirm password do not match"))
-        self.password = make_password(self.password)
-        super().save(*args, **kwargs)
-
-    def clean(self):
-        if BaseUser.objects.filter(email=self.email).exists():
-            raise ValidationError({'email': _('This email address is already in use.')})
-        if BaseUser.objects.filter(username=self.username).exists():
-            raise ValidationError({'username':_('This username is already in use.')})
-        super().clean()
+      "Is the user a member of staff?"
+      # Simplest possible answer: All admins are staff
+      return self.is_staff
