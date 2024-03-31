@@ -4,7 +4,13 @@ services:
   db:
     image: mysql
     environment:
+<<<<<<< HEAD
       - MYSQL_ROOT_PASSWORD=${DB_USER_PASSWORD}
+=======
+      - MYSQL_ROOT_PASSWORD={DB_USER_PASSWORD}
+    volumes:
+      - /var/lib/mysql
+>>>>>>> origin/bugFix
   phpmyadmin:
     image: phpmyadmin
     environment:

@@ -2,7 +2,10 @@ from pathlib import Path
 from django.utils.translation import gettext_lazy as _
 import os
 from datetime import timedelta
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/bugFix
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -107,9 +110,17 @@ AUTH_USER_MODEL = 'accounts.BaseUser'
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 REST_FRAMEWORK = {
+<<<<<<< HEAD
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
+=======
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ]
+>>>>>>> origin/bugFix
 }
 
 # Internationalization
@@ -134,12 +145,15 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+<<<<<<< HEAD
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_USER') 
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
+=======
+>>>>>>> origin/bugFix
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=20),
@@ -147,7 +161,11 @@ SIMPLE_JWT = {
 
     'AUTH_HEADER_TYPES': ('Bearer',),
     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+<<<<<<< HEAD
     'USER_ID_FIELD': 'user_id',
+=======
+    'USER_ID_FIELD': 'id',
+>>>>>>> origin/bugFix
     'USER_ID_CLAIM': 'user_id',
     'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
 
@@ -156,7 +174,10 @@ SIMPLE_JWT = {
     'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
 
     'JTI_CLAIM': 'jti',
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/bugFix
 }
 CORS_ALLOW_METHODS = (
     "DELETE",
