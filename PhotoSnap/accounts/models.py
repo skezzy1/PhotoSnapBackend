@@ -53,8 +53,8 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'password', 'confirm_password']
-    def __str__(self):
-      return self.email
+    def __str__(self): 
+         return self.email
 
     def has_perm(self, perm, obj=None):
       "Does the user have a specific permission?"

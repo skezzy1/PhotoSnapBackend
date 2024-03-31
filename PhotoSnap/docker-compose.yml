@@ -4,7 +4,7 @@ services:
   db:
     image: mysql
     environment:
-      - MYSQL_ROOT_PASSWORD={DB_USER_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_USER_PASSWORD}
   phpmyadmin:
     image: phpmyadmin
     environment:
