@@ -6,7 +6,6 @@ from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import BaseUserManager
 
-<<<<<<< HEAD
 class UserManager(BaseUserManager):
     def create_user(self, email, username, password=None, confirm_password=None):
       """
@@ -39,34 +38,6 @@ class UserManager(BaseUserManager):
       user.is_admin = True
       user.save(using=self._db)
       return user
-=======
-class CustomUserManager(BaseUserManager):
-    def create_user(self, email, username, password=None, **extra_fields):
-        if not email:
-            raise ValueError(_('The Email field must be set'))
-        email = self.normalize_email(email)
-        
-        user = self.model(
-            email=email,
-            username=username,
-            password=password,
-            **extra_fields
-        )
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
-    
-    def create_superuser(self, email, username, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-    
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Superuser must have is_staff=True.')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser must have is_superuser=True.')
-
-        return self.create_user(email, username, password, **extra_fields)
->>>>>>> origin/bugFix
 
 class BaseUser(AbstractBaseUser, PermissionsMixin):
     user_id = models.AutoField(primary_key=True)
@@ -79,7 +50,6 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False, help_text=_('Designates whether the user can log into this admin site.'))
     is_premium = models.BooleanField(default=False, help_text=_('Designates whether the user is a premium user.'))
-<<<<<<< HEAD
     objects = UserManager()
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'password', 'confirm_password']
@@ -101,40 +71,3 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
       "Is the user a member of staff?"
       # Simplest possible answer: All admins are staff
       return self.is_staff
-=======
-    objects = CustomUserManager()
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'password', 'confirm_password']
-
-    def __str__(self):
-        return self.email
-    
-    def has_perm(self, perm, obj=None):
-        "Does the user have a specific permission?"
-        return self.is_superuser
-
-    def has_module_perms(self, admin_site):
-        "Does the user have permissions to view the app 'admin'?"
-        return True
-
-    @property
-    def is_admin(self):
-        "Is the user a member of staff?"
-        return self.is_staff
-
-    def validation(self, *args, **kwargs):
-        if self.password and self.confirm_password != self.password:
-            raise ValidationError(_("Password and confirm password do not match"))
-        if len(self.password or self.confirm_password) < 8:
-            raise ValidationError(_({"password": "Password must be at least 8 characters long."}))
-        self.password = make_password(self.password)
-        self.confirm_passwordpassword = make_password(self.confirm_password)
-        super().save(*args, **kwargs)
-
-    def clean(self):
-        if BaseUser.objects.filter(email=self.email).exists():
-            raise ValidationError({'email': _('This email address is already in use.')})
-        if BaseUser.objects.filter(username=self.username).exists():
-            raise ValidationError({'username':_('This username is already in use.')})
-        super().clean()
->>>>>>> origin/bugFix
