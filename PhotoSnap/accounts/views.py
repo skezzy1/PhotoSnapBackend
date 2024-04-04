@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework.views import APIView
 from .serializers import SendPasswordResetEmailSerializer, UserChangePasswordSerializer, UserLoginSerializer, UserPasswordResetSerializer, UserProfileSerializer, UserRegistrationSerializer
 from django.contrib.auth import authenticate
-from .renderers import UserRenderer
+from .renders import UserRenderer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 
