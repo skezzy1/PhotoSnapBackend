@@ -15,7 +15,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         fields=['email', 'username', 'password', 'confirm_password',]
         extra_kwargs={
         'password':{'write_only':True}
-        }
+         }
 
   # Validating Password and Confirm Password while Registration
     def validate(self, attrs):
@@ -23,6 +23,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         confirm_password = attrs.get('confirm_password')
         if password != confirm_password:
             raise serializers.ValidationError("Password and Confirm Password doesn't match")
+        else:
+            if len(password) or len(confirm_password) < 8:
+                raise serializers.ValidationError("Too short password")
         return attrs
 
     def create(self, validate_data):
@@ -47,9 +50,11 @@ class UserChangePasswordSerializer(serializers.Serializer):
             user = self.context.get('user')
             if password != confirm_password:
                 raise serializers.ValidationError("Password and Confirm Password doesn't match")
-            if len(password) or len(confirm_password) != 8:
-                raise serializers.ValidationError("Password should have exactly 8 characters.")
+            else:
+                if len(password) or len(confirm_password) < 8:
+                    raise serializers.ValidationError("Too short password")
             user.set_password(password)
+            user.make_password(password)
             user.make_password(confirm_password)
             user.save()
             return attrs
