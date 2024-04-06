@@ -28,9 +28,9 @@ parameters = {pair.split('='):pair.split('=')[1] for pair in connection_string.s
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': connection_string('dbname'),
-        'USER': connection_string('host'),
-        'PASSWORD': connection_string('user'),
-        'HOST': connection_string('password'),  
+        'NAME': parameters('dbname'),
+        'USER': parameters('host'),
+        'PASSWORD': parameters('user'),
+        'HOST': parameters('password'),  
     }
 }
