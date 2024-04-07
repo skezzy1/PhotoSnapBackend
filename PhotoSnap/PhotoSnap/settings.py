@@ -14,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'fa5@yst7h3d6_*h8%&s#r#!n=5mf3py42!mpfg^glq3hlq)y1d'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://photosnapapp.azurewebsites.net/']
 
 
 # Application definit
