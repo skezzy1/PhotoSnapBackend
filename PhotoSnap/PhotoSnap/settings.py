@@ -15,7 +15,7 @@ SECRET_KEY = 'g%rti80mlkw$!-ei*v&m9!ix8mlh6a-jov__lbc#2i@8o%og0m'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://photosnapapp.azurewebsites.net/']
 
 
 # Application definit
