@@ -48,6 +48,7 @@ jobs:
         with:
           name: python-app
           path: |
+            cd PhotoSnap
             release.zip
             !venv/
 
@@ -68,8 +69,8 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: |
-          cd PhotoSnap
           unzip release.zip
+          cd PhotoSnap
 
       
       - name: Login to Azure
