@@ -24,7 +24,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         if password != confirm_password:
             raise serializers.ValidationError("Password and Confirm Password doesn't match")
         else:
-            if len(password) or len(confirm_password) < 8:
+            if len(password) < 8 or len(confirm_password) < 8:
                 raise serializers.ValidationError("Too short password")
         return attrs
 

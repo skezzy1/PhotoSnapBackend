@@ -20,10 +20,6 @@ class Book(models.Model):
         return '/'.join( ['products', str(instance.id), filename] )
     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
     book_id = models.AutoField(primary_key=True)
-    book_image = models.ImageField(
-        upload_to=bookFile,
-        max_length=254, blank=True, null=True
-    )
     book_name = models.CharField(max_length=100, blank=False)
     author = models.CharField(max_length=100, blank=True)
     book_time_created = models.DateTimeField(verbose_name=_('Date creation'),  default=timezone.now)
