@@ -2,6 +2,9 @@ from pathlib import Path
 from django.utils.translation import gettext_lazy as _
 import os
 from datetime import timedelta
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 from dotenv import load_dotenv
 load_dotenv()
