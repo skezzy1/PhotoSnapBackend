@@ -6,30 +6,32 @@ from cloudinary.models import CloudinaryField
 
 class Book(models.Model):   
     book_id = models.AutoField(primary_key=True)
-    book_image = CloudinaryField('image')
+    book_image = CloudinaryField('image', blank=True)
     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
     book_name = models.CharField(max_length=100)  
     author = models.CharField(max_length=100, blank=True)  
     book_time_created = models.DateTimeField(default=timezone.now)
 
     BOOK_TYPE_CHOICES = [
-        (1, 'Book'),
-        (2, 'Copy book'),
-        (3, 'Diary'),
-        (4, 'Magazine'),
-        (5, 'Newspaper'),
-        (6, 'Others'),
+        (1, 'Choose type'),
+        (2, 'Book'),
+        (3, 'Copy book'),
+        (4, 'Diary'),
+        (5, 'Magazine'),
+        (6, 'Newspaper'),
+        (7, 'Others'),
     ]
     book_type = models.IntegerField(choices=BOOK_TYPE_CHOICES, default=1)
 
     BOOK_CATEGORY_CHOICES = [
-        (1, 'Fantasy'),
-        (2, 'History'),
-        (3, 'Mystery'),
-        (4, 'Novel'),
-        (5, 'Poetry'),
-        (6, 'Thrillers'),
-        (7, 'Others'),
+        (1, 'Choose category'),
+        (2, 'Fantasy'),
+        (3, 'History'),
+        (4, 'Mystery'),
+        (5, 'Novel'),
+        (6, 'Poetry'),
+        (7, 'Thrillers'),
+        (8, 'Others'),
     ]
     book_category = models.IntegerField(choices=BOOK_CATEGORY_CHOICES, default=1)
 
