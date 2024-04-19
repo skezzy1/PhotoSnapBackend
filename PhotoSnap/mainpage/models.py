@@ -18,12 +18,12 @@ class BookManager(models.Manager):
         return book
 
 class Book(models.Model):
-    book_image = CloudinaryField(blank=True, null=True)
-    user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
     book_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)  
+    book_image = CloudinaryField('image')
+    user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
+    book_name = models.CharField(max_length=100)  
     author = models.CharField(max_length=100, blank=True)  
-    book_time_created = models.DateTimeField(verbose_name=_('Date creation'), default=timezone.now)
+    book_time_created = models.DateTimeField(default=timezone.now)
 
     BOOK_TYPE_CHOICES = [
         (1, 'Book'),
@@ -52,11 +52,10 @@ class Book(models.Model):
 
 
 class BookNote(models.Model):
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='notes')
-    user = models.ForeignKey(BaseUser, on_delete=models.CASCADE, null=True, blank=True)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE,)
+    user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
     content = models.TextField(max_length=100) 
-    book_note_created = models.DateField(verbose_name='Creation date', default=timezone.now)
-    updated = models.DateTimeField(auto_now=True)
+    book_note_created = models.DateField(default=timezone.now)
 
     def __str__(self):
         return f"Note for {self.book.name}"

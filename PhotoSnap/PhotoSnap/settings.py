@@ -24,7 +24,7 @@ ALLOWED_HOSTS = ['*']
 # Application definit
 
 INSTALLED_APPS = [
-    'cloudinary_storage',
+    'cloudinary',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_swagger', 
+    'drf_yasg',  
     'corsheaders',
     'accounts',
     'mainpage',
