@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
-from .models import Book, BookNote
-from .serializers import BookSerializer, BookNoteSerializer
+from .models import Book, BookNote, NoteStore
+from .serializers import BookSerializer, BookNoteSerializer, NoteStorageSerializer
 from .renders import BookRenderer
 
 class BookView(APIView):
@@ -25,4 +25,15 @@ class BookNoteView(APIView):
         book = get_object_or_404(Book, pk=book_id)
         notes = BookNote.objects.filter(book=book)
         serializer = BookNoteSerializer(notes, many=True)
+        return Response(serializer.data)
+class NoteStorageView(APIView):
+    renderer_classes = [BookRenderer]
+    permission_classes = [IsAuthenticated]
+    def note_list(self):
+        notes = NoteStore.objects.all()
+        serializer = NoteStorageSerializer(notes, many=True)
+        return Response(serializer.data)
+    def note_detail(self, note_id):
+        notes = get_object_or_404(notes, pk=note_id)
+        serializer = NoteStorageSerializer(notes, many=True)
         return Response(serializer.data)

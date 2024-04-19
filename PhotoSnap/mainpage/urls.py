@@ -7,5 +7,4 @@ urlpatterns = [
     path('books/<int:book_id>/notes/', BookNoteView.book_notes, name='book_notes'),
     path('notestorage/', NoteStorageView.note_list, name = 'note_list'),
     path('notestorage/<int:note_id>', NoteStorageView.note_detail, name='note_detail'),
-    path('notestorage/<init:note_id>/notes/', NoteStorageView.note_storage_notes, name='bookstorage_notes'),
 ]

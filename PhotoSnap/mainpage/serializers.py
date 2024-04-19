@@ -1,6 +1,5 @@
 from rest_framework import serializers
-from .models import Book, BookNote, BookStore
-from django.utils.translation import gettext_lazy as _ 
+from .models import Book, BookNote, NoteStore
 
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,5 +12,5 @@ class BookNoteSerializer(serializers.ModelSerializer):
         fields = '__all__'
 class NoteStorageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = BookStore
+        model = NoteStore
         fields = '__all__'
