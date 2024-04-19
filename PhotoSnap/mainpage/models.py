@@ -4,19 +4,6 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from cloudinary.models import CloudinaryField
 
-class BookManager(models.Manager):
-    def create_book(self, image, user, name, author, book_type, book_category):
-        book = self.model(
-            image=image,
-            user=user,
-            name=name,
-            author=author,
-            book_type=book_type,
-            book_category=book_category,
-        )
-        book.save(using=self._db)
-        return book
-
 class Book(models.Model):
     book_id = models.AutoField(primary_key=True)
     book_image = CloudinaryField('image')
@@ -45,7 +32,6 @@ class Book(models.Model):
         (7, 'Others'),
     ]
     book_category = models.IntegerField(choices=BOOK_CATEGORY_CHOICES, default=1)
-    objects = BookManager()
 
     def __str__(self):
         return self.name
