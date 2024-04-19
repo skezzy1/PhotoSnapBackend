@@ -34,7 +34,7 @@ class Book(models.Model):
     book_category = models.IntegerField(choices=BOOK_CATEGORY_CHOICES, default=1)
 
     def __str__(self):
-        return self.name
+        return self.book_name
 
 
 class BookNote(models.Model):
