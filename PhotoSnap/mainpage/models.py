@@ -44,7 +44,7 @@ class BookNote(models.Model):
     book_note_created = models.DateField(default=timezone.now)
 
     def __str__(self):
-        return f"Note for {self.book.name}"
+        return f"Note for {self.book.book_name}"
 
 class NoteStore(models.Model):
     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
