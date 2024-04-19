@@ -71,7 +71,6 @@ TEMPLATES = [
         },
     },
 ]
-STATIC_ROOT = BASE_DIR/'staticfiles'
 
 WSGI_APPLICATION = 'PhotoSnap.wsgi.application'
 
@@ -143,10 +142,7 @@ cloudinary.config(
     api_key = os.environ.get('API_KEY'),
     api_secret = os.environ.get('API_SECRET'),
 )
-MEDIA_URL = '/media/'
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-STATIC_URL = '/static/'
-STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
+STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from cloudinary.models import CloudinaryField
 
-class Book(models.Model):
+class Book(models.Model):   
     book_id = models.AutoField(primary_key=True)
     book_image = CloudinaryField('image')
     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
@@ -45,3 +45,11 @@ class BookNote(models.Model):
 
     def __str__(self):
         return f"Note for {self.book.name}"
+
+class BookStore(models.Model):
+    user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
+    note = models.TextField(max_length=100)
+    note_created = models.DateField(default=timezone.now)
+    
+    def __str__(self):
+        return f"Note for {self.user.username}"
