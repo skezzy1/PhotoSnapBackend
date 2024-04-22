@@ -8,7 +8,6 @@ from .serializers import BookSerializer, BookNoteSerializer, NoteStorageSerializ
 
 class BookView(APIView):
     permission_classes = [IsAuthenticated]
-
     def get(self, request): 
         books = Book.objects.all()
         serializer = BookSerializer(books, many=True)
