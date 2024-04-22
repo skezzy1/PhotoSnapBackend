@@ -27,7 +27,6 @@ class BookView(APIView):
 
 class BookNoteView(APIView):
     permission_classes = [IsAuthenticated]
-
     def book_notes(self, request, book_id):
         book = get_object_or_404(Book, pk=book_id)
         notes = BookNote.objects.filter(book=book)
