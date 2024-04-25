@@ -44,7 +44,7 @@ class BookNote(models.Model):
     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
     content = models.TextField(max_length=100) 
     book_note_created = models.DateField(default=timezone.now)
-
+    book_note_id = models.AutoField(primary_key=True)
     def __str__(self):
         return f"Note for {self.book.book_name}"
 
@@ -56,3 +56,9 @@ class NoteStore(models.Model):
 
     def __str__(self):
         return f"Note for {self.user.username}"
+class Search(models.Model):
+    user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
+    search_field = models.TextField(max_length=100)
+    
+    def __str__(self):
+        return f"Search for {self.user.username}"
