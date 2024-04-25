@@ -7,7 +7,6 @@ from .models import Book, BookNote, NoteStore
 from .serializers import BookSerializer, BookNoteSerializer, NoteStorageSerializer
 
 class BookView(APIView):
-    permission_classes = [IsAuthenticated]
     def get(self, request): 
         books = Book.objects.all()
         serializer = BookSerializer(books, many=True)
@@ -24,6 +23,24 @@ class BookView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def put(self, request, book_id):
+        book = get_object_or_404(Book, pk=book_id)
+        serializer = BookSerializer(book, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, book_id):
+        book = get_object_or_404(Book, pk=book_id)
+        serializer = BookSerializer(book)
+        if serializer.is_valid():
+            serializer.delete()
+            return Response(serializer.data)
+        else:
+            book.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
 class BookNoteView(APIView):
     permission_classes = [IsAuthenticated]
@@ -32,7 +49,11 @@ class BookNoteView(APIView):
         notes = BookNote.objects.filter(book=book)
         serializer = BookNoteSerializer(notes, many=True)
         return Response(serializer.data)
-
+    def get(self, request, book_id):
+        book = get_object_or_404(Book, pk=book_id)
+        notes = BookNote.objects.filter(book=book)
+        serializer = BookNoteSerializer(notes, many=True)
+        return Response(serializer.data)
     def post(self, request, book_id):
         book = get_object_or_404(Book, pk=book_id)
         serializer = BookNoteSerializer(data=request.data)
@@ -40,6 +61,19 @@ class BookNoteView(APIView):
             serializer.save(book=book)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def put(self, request, book_id, pk):
+        note = get_object_or_404(BookNote, pk=pk)
+        serializer = BookNoteSerializer(note, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk):
+        book = get_object_or_404(Book, pk=pk)
+        book.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class NoteStorageView(APIView):
     permission_classes = [IsAuthenticated]
