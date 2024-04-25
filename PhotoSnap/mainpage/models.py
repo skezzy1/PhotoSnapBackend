@@ -42,7 +42,7 @@ class Book(models.Model):
 class BookNote(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
-    content = models.TextField(max_length=100) 
+    content = models.TextField(max_length=1000) 
     book_note_created = models.DateField(default=timezone.now)
     book_note_id = models.AutoField(primary_key=True)
     def __str__(self):
@@ -51,7 +51,7 @@ class BookNote(models.Model):
 class NoteStore(models.Model):
     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
     note_id = models.AutoField(primary_key=True)
-    note = models.TextField(max_length=100)
+    note = models.TextField(max_length=1000)
     note_created = models.DateField(default=timezone.now)
 
     def __str__(self):
