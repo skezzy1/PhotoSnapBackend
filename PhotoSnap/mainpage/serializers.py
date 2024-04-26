@@ -6,9 +6,11 @@ class BookSerializer(serializers.ModelSerializer):
         model = Book
         fields = '__all__'
     def validate(self, attrs):
-        if attrs['book_name'] == attrs['book_name']:
-            raise serializers.ValidationError("Book name is already taken, can't be same")
-        return super().validate(attrs)
+        book_name = attrs.get('book_name', None)
+        if book_name:
+            if Book.objects.filter(book_name=book_name).exists():
+                raise serializers.ValidationError("A book with this name already exists.")
+            return attrs
 class BookNoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookNote
