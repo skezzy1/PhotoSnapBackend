@@ -5,12 +5,24 @@ class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
         fields = '__all__'
+    def create(self, validated_data):
+        return Book.objects.create(**validated_data)
     def validate(self, attrs):
-        book_name = attrs.get('book_name', None)
-        if book_name:
-            if Book.objects.filter(book_name=book_name).exists():
-                raise serializers.ValidationError("A book with this name already exists.")
-            return attrs
+        book_name = attrs.get('book_name')
+        if book_name and Book.objects.filter(book_name=book_name).exists():
+            raise serializers.ValidationError("A book with this name already exists.")
+        return attrs
+    def update(self, instance, validated_data):
+        instance.book_name = validated_data.get('book_name', instance.book_name)
+        instance.user = validated_data.get('user', instance.user)
+        instance.author = validated_data.get('author', instance.author)
+        instance.book_image = validated_data.get('book_image', instance.book_image)
+        instance.book_time_created = validated_data.get('book_time_created', instance.book_time_created)
+        instance.book_type = validated_data.get('book_type', instance.book_type)
+        instance.book_category = validated_data.get('book_category', instance.book_category)
+        instance.save()
+        return instance
+    
 class BookNoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookNote
