@@ -1,4 +1,5 @@
 from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
@@ -7,16 +8,13 @@ from .models import Book, BookNote, NoteStore
 from .serializers import BookSerializer, BookNoteSerializer, NoteStorageSerializer
 
 class BookView(APIView):
-    def get(self, request): 
-        books = Book.objects.all()
-        serializer = BookSerializer(books, many=True)
-        return Response(serializer.data)
-
-    def book_detail(self, request, book_id):
-        book = get_object_or_404(Book, pk=book_id)
-        serializer = BookSerializer(book)
-        return Response(serializer.data)
-
+    def get(self, request, book_id=None): 
+        if book_id is not None: 
+            return self.book_detail(request, book_id) 
+        else:
+            books = Book.objects.all()
+            serializer = BookSerializer(books, many=True)
+            return Response(serializer.data)
     def post(self, request):
         serializer = BookSerializer(data=request.data)
         if serializer.is_valid():
@@ -26,6 +24,14 @@ class BookView(APIView):
     
     def put(self, request, book_id):
         book = get_object_or_404(Book, pk=book_id)
+        serializer = BookSerializer(book, data=request.data, partial=True) 
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def edit(self, request, book_id):
+        book = get_object_or_404(Book, pk=book_id)
         serializer = BookSerializer(book, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -34,13 +40,13 @@ class BookView(APIView):
 
     def delete(self, request, book_id):
         book = get_object_or_404(Book, pk=book_id)
+        book.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def book_detail(self, request, book_id):
+        book = get_object_or_404(Book, pk=book_id)
         serializer = BookSerializer(book)
-        if serializer.is_valid():
-            serializer.delete()
-            return Response(serializer.data)
-        else:
-            book.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.data)
 
 class BookNoteView(APIView):
     permission_classes = [IsAuthenticated]
