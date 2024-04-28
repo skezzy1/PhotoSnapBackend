@@ -8,6 +8,7 @@ from .models import Book, BookNote, NoteStore
 from .serializers import BookSerializer, BookNoteSerializer, NoteStorageSerializer
 
 class BookView(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, book_id=None): 
         if book_id is not None: 
             return self.book_detail(request, book_id) 
@@ -68,22 +69,19 @@ class BookNoteView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     def put(self, request, book_id, pk):
-        note = get_object_or_404(BookNote, pk=pk)
+        note = get_object_or_404(BookNote, pk=book_id)
         serializer = BookNoteSerializer(note, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
     def delete(self, request, pk):
         book = get_object_or_404(Book, pk=pk)
         book.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
 class NoteStorageView(APIView):
     permission_classes = [IsAuthenticated]
-
     def note_list(self, request):
         notes = NoteStore.objects.all()
         serializer = NoteStorageSerializer(notes, many=True)
