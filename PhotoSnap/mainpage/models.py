@@ -43,7 +43,7 @@ class BookNote(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
     content = models.TextField(max_length=500) 
-    book_note_created = models.DateField(default=timezone.now)
+    book_note_created = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"Note for {self.book.book_name}"
@@ -52,8 +52,8 @@ class NoteStore(models.Model):
     note_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
     note_name = models.TextField(max_length=100, blank=True)
-    note = models.TextField(max_length=500)
-    note_created = models.DateField(default=timezone.now)
+    note_content = models.TextField(max_length=500)
+    note_created = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"Note for {self.user.username}"
