@@ -41,6 +41,7 @@ class Book(models.Model):
 class BookNote(models.Model):
     book_note_id = models.AutoField(primary_key=True)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    user = models.ForeignKey(BaseUser, on_delete=models.CASCADE, default=None)
     content = models.TextField(max_length=500) 
     book_note_created = models.DateTimeField(default=timezone.now)
 
