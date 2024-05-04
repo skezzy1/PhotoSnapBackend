@@ -34,11 +34,6 @@ class BookNoteSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'user': {'required': False}
         }
-    def create(self, validated_data):
-        book_id = self.context['book_id'] 
-        book = get_object_or_404(Book, pk=book_id)
-        note = BookNote.objects.create(book=book, **validated_data)
-        return note
     def update(self, instance, validated_data):
         instance.note_name = validated_data.get('note_name', instance.note_name)
         instance.note_content = validated_data.get('note_content', instance.note_content)
