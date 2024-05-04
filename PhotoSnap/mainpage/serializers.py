@@ -9,9 +9,11 @@ class BookSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return Book.objects.create(**validated_data)
     def validate(self, attrs):
+        request = self.context.get('request')
+        user = request.user
         book_name = attrs.get('book_name')
-        if book_name and Book.objects.filter(book_name=book_name).exists():
-            raise serializers.ValidationError("A book with this name already exists.")
+        if Book.objects.filter(book_name=book_name, user=user).exists():
+            raise serializers.ValidationError("A book with this name already exists for this user.")
         return attrs
     def update(self, instance, validated_data):
         instance.book_name = validated_data.get('book_name', instance.book_name)
@@ -33,8 +35,8 @@ class BookNoteSerializer(serializers.ModelSerializer):
         book = get_object_or_404(Book, pk=book_id)
         note = BookNote.objects.create(book=book, **validated_data)
         return note
+
 class NoteStorageSerializer(serializers.ModelSerializer):
     class Meta:
         model = NoteStore
         fields = '__all__'
-        
