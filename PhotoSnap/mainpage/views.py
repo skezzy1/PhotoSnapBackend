@@ -55,11 +55,12 @@ class BookNoteView(APIView):
             return Response({"error": "book_id parameter is missing"}, status=status.HTTP_400_BAD_REQUEST)
     def post(self, request, book_id):
         book = get_object_or_404(Book, pk=book_id)
-        serializer = BookNoteSerializer(data=request.data, context={'request': request, 'book': book})
+        serializer = BookNoteSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
-            serializer.save(user=request.user) 
+            serializer.save(user=request.user, book=book) 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def put(self, request, book_id, book_note_id):
         book = get_object_or_404(Book, pk=book_id, user=request.user)
         note = get_object_or_404(BookNote, pk=book_note_id, book=book)
