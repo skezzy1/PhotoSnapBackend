@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from django.shortcuts import get_object_or_404
 from .models import Book, BookNote, NoteStore
 
 class BookSerializer(serializers.ModelSerializer):
@@ -40,8 +39,8 @@ class BookNoteSerializer(serializers.ModelSerializer):
         return note
 
     def update(self, instance, validated_data):
-        instance.note_name = validated_data.get('note_name', instance.note_name)
-        instance.note_content = validated_data.get('note_content', instance.note_content)
+        instance.book_note_name = validated_data.get('book_note_name', instance.book_note_name)
+        instance.book_note_content = validated_data.get('book_note_content', instance.book_note_content) 
         instance.save()
         return instance
 class NoteStorageSerializer(serializers.ModelSerializer):
