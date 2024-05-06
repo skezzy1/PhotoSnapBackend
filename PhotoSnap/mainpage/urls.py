@@ -1,7 +1,9 @@
 from django.urls import path
-from .views import BookView, BookNoteView, NoteStorageView
+from .views import BookView, BookNoteView, NoteStorageView, BookSearchView
 
 urlpatterns = [
+    #search url
+    path('search/', BookSearchView.as_view(), name='book_search'),
     #books urls
     path('books/create', BookView.as_view(), name='book_create'),
     path('books/<int:book_id>/update', BookView.as_view(), name='book_update'),
@@ -13,9 +15,9 @@ urlpatterns = [
     path('books/<int:book_id>/notes', BookNoteView.as_view(), name='book_notes'),
     path('books/<int:book_id>/notes/create', BookNoteView.as_view(), name='create_book_note'),
     path('books/<int:book_id>/notes/<int:book_note_id>', BookNoteView.as_view(), name='book_note_detail'),
-    path('books/<int:book_id>/notes/<int:book_note_id>/update', BookView.as_view(), name='book_note_update'),
-    path('books/<int:book_id>/notes/<int:book_note_id>/delete', BookView.as_view(), name='book_note_delete'),
-    path('books/<int:book_id>/notes/<int:book_note_id>/sound', BookView.as_view(), name='book_note_sound'),
+    path('books/<int:book_id>/notes/<int:book_note_id>/update', BookNoteView.as_view(), name='book_note_update'),
+    path('books/<int:book_id>/notes/<int:book_note_id>/delete', BookNoteView.as_view(), name='book_note_delete'),
+    path('books/<int:book_id>/notes/<int:book_note_id>/sound', BookNoteView.as_view(), name='book_note_sound'),
     #notes urls
     path('notestorage', NoteStorageView.as_view(), name='note_list'),
     path('notestorage/create', NoteStorageView.as_view(), name='note_create'),
