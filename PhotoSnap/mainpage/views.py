@@ -4,11 +4,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.generics import ListAPIView
-from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 from .models import Book, BookNote, NoteStore
 from .serializers import BookSerializer, BookNoteSerializer, NoteStorageSerializer
+from rest_framework import generics
+from django.db.models import Q
 
 class BookView(APIView):
     permission_classes = [IsAuthenticated]
@@ -108,17 +108,22 @@ class NoteStorageView(APIView):
         note.delete()
         return Response({"message": "Note deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
     
-class BookSearchView(APIView):
-    serializer_class = BookSerializer
+class SearchView(APIView):
+    serializer_class = BookNoteSerializer
     permission_classes = [IsAuthenticated]
-    queryset = Book.objects.all()
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['category', 'in_stock']  # Якщо ви хочете фільтрувати по конкретним полям
-    search_fields = ['title', 'author']  # Якщо ви хочете використовувати фільтр пошуку
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        query = self.request.query_params.get('q')
+    def get(self, request):
+        query = self.request.query_params.get('q', None)
+        user = request.user 
+        queryset = BookNote.objects.filter(user=user)  
+        
         if query:
-            queryset = queryset.filter(title__icontains=query) | queryset.filter(author__icontains=query)
-        return queryset
+            queryset = queryset.filter(
+                Q(book__title__icontains=query) |  
+                Q(note_name__icontains=query) | 
+                Q(book__note_content__icontains=query) |  
+                Q(book__author__icontains=query)  
+            )
+
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
