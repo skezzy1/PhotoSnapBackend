@@ -25,7 +25,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'cloudinary',
-
+    'django_filters',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -112,6 +112,7 @@ AUTH_USER_MODEL = 'accounts.BaseUser'
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
