@@ -108,22 +108,37 @@ class NoteStorageView(APIView):
         note.delete()
         return Response({"message": "Note deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
     
-class SearchView(APIView):
-    serializer_class = BookNoteSerializer
+from rest_framework.response import Response
+from .models import Book, BookNote, NoteStore
+from .serializers import BookSerializer, BookNoteSerializer, NoteStorageSerializer
+
+class SearchView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
+    filter_backends = (filters.SearchFilter,)
+    search_fields_book = ['author', 'book_name', 'book_type', 'book_category']
+    search_fields_note = ['book_note_name', 'book_note_content']
+    search_fields_storage = ['note_name', 'note_content']
 
-    def get(self, request):
-        query = self.request.query_params.get('q', None)
-        user = request.user 
-        queryset = BookNote.objects.filter(user=user)  
-        
+    def get_queryset(self):
+        user_identifier = self.request.user.user_id
+        query = self.request.query_params.get('search', None)
+        queryset_book = Book.objects.none()
+        queryset_note = BookNote.objects.none()
+        queryset_storage = NoteStore.objects.none()
+
         if query:
-            queryset = queryset.filter(
-                Q(book__title__icontains=query) |  
-                Q(note_name__icontains=query) | 
-                Q(book__note_content__icontains=query) |  
-                Q(book__author__icontains=query)  
-            )
+            for field in self.search_fields_book:
+                queryset_book |= Book.objects.filter(user=user_identifier, **{f"{field}__icontains": query})
+            for field in self.search_fields_note:
+                queryset_note |= BookNote.objects.filter(user=user_identifier, **{f"{field}__icontains": query})
+            for field in self.search_fields_storage:
+                queryset_storage |= NoteStore.objects.filter(user=user_identifier, **{f"{field}__icontains": query})
 
-        serializer = self.serializer_class(queryset, many=True)
-        return Response(serializer.data)
+        return queryset_book, queryset_note, queryset_storage
+
+    def list(self, request, *args, **kwargs):
+        queryset_book, queryset_note, queryset_storage = self.get_queryset()
+        serializer_book = BookSerializer(queryset_book, many=True)
+        serializer_note = BookNoteSerializer(queryset_note, many=True)
+        serializer_storage = NoteStorageSerializer(queryset_storage, many=True)
+        return Response(serializer_book.data + serializer_note.data + serializer_storage.data)
