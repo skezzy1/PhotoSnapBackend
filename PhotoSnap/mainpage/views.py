@@ -107,10 +107,6 @@ class NoteStorageView(APIView):
         note = get_object_or_404(NoteStore, pk=note_id, user=request.user)
         note.delete()
         return Response({"message": "Note deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
-    
-from rest_framework.response import Response
-from .models import Book, BookNote, NoteStore
-from .serializers import BookSerializer, BookNoteSerializer, NoteStorageSerializer
 
 class SearchView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
