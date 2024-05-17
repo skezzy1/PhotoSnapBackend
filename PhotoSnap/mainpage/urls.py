@@ -24,6 +24,5 @@ urlpatterns = [
     path('notestorage/<int:note_id>/update', NoteStorageView.as_view(), name='note_update'),
     path('notestorage/<int:note_id>/delete', NoteStorageView.as_view(), name='note_delete'),
     path('notestorage/<int:note_id>', NoteStorageView.as_view(), name='note_detail'), 
-    path('notestorage/<int:note_id>/sound', NoteStorageView.as_view(), name='note_sound'), # Only one note from notestorage
-    path('notestorage/sound', NoteStorageView.as_view(), name='notes_sound'), # All sound store 
+    path('notestorage/<int:note_id>/sound', NoteStorageView.as_view(), name='note_sound'), # Only one note from notestorage 
 ]
