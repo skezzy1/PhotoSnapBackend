@@ -45,7 +45,7 @@ class BookNote(models.Model):
     book_note_name = models.TextField(max_length=100, blank=True)
     book_note_content = models.TextField(max_length=500) 
     book_note_created = models.DateTimeField(default=timezone.now)
-
+    book_note_audio_url = models.URLField(blank=True)
     def __str__(self):
         return f"Note for {self.book.book_name}"
 
@@ -55,6 +55,7 @@ class NoteStore(models.Model):
     note_name = models.TextField(max_length=100, blank=True)
     note_content = models.TextField(max_length=500)
     note_created = models.DateTimeField(default=timezone.now)
+    note_store_audio_url = models.URLField(blank=True)
 
     def __str__(self):
         return f"Note for {self.user.username}"
